@@ -1,4 +1,5 @@
 package main.code.source.rest;
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import main.code.source.entity.TasksEntity;
 import main.code.source.service.TasksService;
@@ -11,6 +12,11 @@ import java.util.List;
 public class TasksRest {
     @Autowired
     private TasksService service;
+
+    @PostConstruct
+    public void response(){
+        System.out.println("Application is up");
+    }
 
     @GetMapping("/list")
     public List<TasksEntity> showListOfTasks(){
