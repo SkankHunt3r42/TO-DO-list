@@ -1,7 +1,7 @@
-package main.code.source.rest;
+package main.code.source.controller;
 import jakarta.annotation.PostConstruct;
-import jakarta.persistence.EntityManager;
 import main.code.source.entity.TasksEntity;
+import main.code.source.excHandler.exception.TaskNotFoundExc;
 import main.code.source.service.TasksService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +13,6 @@ public class TasksRest {
     @Autowired
     private TasksService service;
 
-    @PostConstruct
-    public void response(){
-        System.out.println("Application is up");
-    }
-
     @GetMapping("/list")
     public List<TasksEntity> showListOfTasks(){
         return service.findAll();
@@ -27,7 +22,7 @@ public class TasksRest {
         TasksEntity tasksEntity = service.findById(id);
 
         if(tasksEntity == null){
-            throw new RuntimeException("No such task for today");
+            throw new TaskNotFoundExc("No such task for today with id: " + id );
         }
 
         return tasksEntity ;
@@ -35,6 +30,7 @@ public class TasksRest {
     @GetMapping("/list/priority/{priority}")
     public List<TasksEntity> showAllTasksByPriority(@PathVariable String priority){
         List<TasksEntity> listOfTasks = service.findByPriority(priority);
+
         return listOfTasks;
     }
     @PostMapping("/list")
@@ -59,9 +55,9 @@ public class TasksRest {
 
         if(tasksEntity != null){
             service.deleteTask(Id);
-            return "Task was successful deleted";
+            return "Task with id: " + Id + " was successful deleted";
         } else {
-            throw new RuntimeException("Task with id: " + Id + " are not exists");
+            throw new TaskNotFoundExc("Task with id: " + Id + " are not exists");
         }
 
     }

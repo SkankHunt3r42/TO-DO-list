@@ -2,7 +2,7 @@ package main.code.source.service;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import main.code.source.dao.DAO;
+import main.code.source.dao.TasksEntRepo;
 import main.code.source.entity.TasksEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,11 +13,11 @@ import java.util.Optional;
 @Service
 public class TasksServiceImp implements TasksService {
 
-    private final  DAO TaskDao;
+    private final TasksEntRepo TaskDao;
     private final EntityManager  TaskManager;
 
     @Autowired
-    public TasksServiceImp(DAO dao,EntityManager Manager) {
+    public TasksServiceImp(TasksEntRepo dao, EntityManager Manager) {
         this.TaskDao = dao;
         this.TaskManager = Manager;
     }
@@ -37,10 +37,6 @@ public class TasksServiceImp implements TasksService {
         if (result.isPresent()) {
             tasks = result.get();
         }
-        else {
-            throw new RuntimeException("Did not find employee id - " + Id);
-        }
-
         return tasks;
     }
 
@@ -54,6 +50,7 @@ public class TasksServiceImp implements TasksService {
     @Override
     public TasksEntity save(TasksEntity tasksEntity) {
         TasksEntity entity = TaskDao.save(tasksEntity);
+
 
         return entity;
     }
